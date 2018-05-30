@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Position2Shp</string>
+    <string name="shapefile_read_permission_denied">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="shapefile_type">
+        <item>Points</item>
+        <item>Polyline</item>
+        <item>Polygon</item>
+    </string-array>
+
+    <string name="addOrEdit">Add / Edit</string>
+    <string name="WgsUtm">WGS84 / UTM</string>
+
+</resources>

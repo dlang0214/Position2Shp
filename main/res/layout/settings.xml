@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:text="Settings"
+        android:layout_width="134dp"
+        android:layout_height="47dp"
+        android:id="@+id/textView3"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editText3"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="11dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:hint="New file name" />
+
+    <Spinner
+        android:layout_width="215dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner"
+        android:layout_below="@+id/textView2"
+        android:layout_alignStart="@+id/editText3"
+        android:layout_marginTop="10dp" />
+
+    <CheckBox
+        android:text="OK"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editExistingShp"
+        android:layout_below="@+id/spinner"
+        android:layout_alignStart="@+id/spinner"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:text="Create a new shapefile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView4"
+        android:layout_above="@+id/editText3"
+        android:layout_alignStart="@+id/editText3"
+        android:layout_marginBottom="37dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner2"
+        android:layout_above="@+id/editText3"
+        android:layout_alignStart="@+id/editText3"
+        android:layout_alignEnd="@+id/spinner" />
+
+    <Button
+        android:text="Create"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox2"
+        android:onClick="onEditEmpty"
+        android:layout_below="@+id/editText3"
+        android:layout_alignStart="@+id/editText3"
+        android:elevation="0dp" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editText4"
+        android:layout_alignStart="@+id/checkBox2"
+        android:layout_marginTop="13dp">
+
+        <RadioButton
+            android:text="Track"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioButton5"
+            android:layout_weight="1"
+            android:layout_alignBaseline="@+id/radioButton3"
+            android:layout_alignBottom="@+id/radioButton3"
+            android:layout_toEndOf="@+id/textView4" />
+
+        <RadioButton
+            android:text="Manually adding"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/radioButton3"
+            android:layout_weight="1"
+            android:layout_below="@+id/checkBox2"
+            android:layout_alignStart="@+id/checkBox2"
+            android:layout_marginTop="10dp" />
+    </RadioGroup>
+
+    <TextView
+        android:text="Edit an existing shapefile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:layout_below="@+id/textView3"
+        android:layout_alignStart="@+id/spinner" />
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:id="@+id/editText4"
+        android:layout_width="wrap_content"
+        android:text="Position sensitivity:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:layout_marginTop="21dp"
+        android:layout_below="@+id/checkBox2"
+        android:layout_marginStart="17dp" />
+
+</RelativeLayout>
