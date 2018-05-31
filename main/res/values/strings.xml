@@ -6,12 +6,25 @@
     <string name="action_settings">Settings</string>
 
     <string-array name="shapefile_type">
-        <item>Points</item>
         <item>Polyline</item>
+        <item>Points</item>
         <item>Polygon</item>
     </string-array>
 
     <string name="addOrEdit">Add / Edit</string>
     <string name="WgsUtm">WGS84 / UTM</string>
+
+    <string name="BasicDir">/Position2Shp/</string>
+    <string name="UserShapefiles">UserShapefiles</string>
+    <string name="BasicShapefiles">BasicShapefiles</string>
+    <string name="NewShapefiles">NewShapefiles/</string>
+
+    <string name="BasicPoint">/EmptyPoint/BasicPoint.shp</string>
+    <string name="BasicLine">/EmptyLine/BasicLine.shp</string>
+    <string name="BasicPolygon">/EmptyPolygon/BasicPolygon.shp</string>
+
+    <string name="BasicPointDir">/EmptyPoint/</string>
+    <string name="BasicLineDir">/EmptyLine/</string>
+    <string name="BasicPolygonDir">/EmptyPolygon/</string>
 
 </resources>

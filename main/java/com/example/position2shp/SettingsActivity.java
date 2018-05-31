@@ -46,11 +46,30 @@ public class SettingsActivity extends Activity implements AdapterView.OnItemSele
 
         edtText = (EditText) findViewById(R.id.editText3);
 
-        String filepath = Environment.getExternalStorageDirectory().getPath() + "/ArcGIS/Samples/Shapefile/";
+        String filepath = Environment.getExternalStorageDirectory().getPath() +
+                getResources().getString(R.string.BasicDir) +
+                getResources().getString(R.string.UserShapefiles);
 
         List<String> fileList = new ArrayList<String>();
         File f = new File(filepath);
         File[] files = f.listFiles();
+        for (File inFile : files) {
+            if (inFile.isDirectory()) {
+                File[] files2 = inFile.listFiles();
+                for (File inFile2 : files2){
+                    if (inFile2.isFile() && inFile2.getAbsolutePath().contains(".shp"))
+                        fileList.add(inFile2.getName());
+                }
+
+            }
+        }
+
+        filepath = Environment.getExternalStorageDirectory().getPath() +
+                getResources().getString(R.string.BasicDir) +
+                getResources().getString(R.string.NewShapefiles);
+
+        f = new File(filepath);
+        files = f.listFiles();
         for (File inFile : files) {
             if (inFile.isDirectory()) {
                 File[] files2 = inFile.listFiles();
@@ -76,10 +95,9 @@ public class SettingsActivity extends Activity implements AdapterView.OnItemSele
         // Create an ArrayAdapter using the string array and a default spinner layout
         ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this,
         R.array.shapefile_type, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
         spinner2.setAdapter(adapter2);
+        spinner2.setOnItemSelectedListener(this);
     }
 
     public void copy(File src, File dst) throws IOException {
@@ -94,27 +112,66 @@ public class SettingsActivity extends Activity implements AdapterView.OnItemSele
 
     public void onEditEmpty(View view)
     {
-        String filePath = Environment.getExternalStorageDirectory().getPath() +
-                "/ArcGIS/Samples/Shapefile/EmptyShapefileUTM/" +
-                edtText.getText().toString();
+        String copyTofilepath = Environment.getExternalStorageDirectory().getPath() +
+                getResources().getString(R.string.BasicDir) +
+                getResources().getString(R.string.NewShapefiles) +
+                edtText.getText().toString() + "/";
 
-        File dest = new File(filePath);
-        File source = new File(MainActivity.mShapefilePath2);
-        if (source.exists()) {
-            try {
-                copy(source, dest);
-                //MainActivity.mShapefilePath2 = filePath;
-            } catch (Exception ex) {
-            }
+        String copiedShp = Environment.getExternalStorageDirectory().getPath() +
+                getResources().getString(R.string.BasicDir) +
+                getResources().getString(R.string.BasicShapefiles);
+
+        if(MainActivity.actualShpType == MainActivity.ShapefileTypes.Point)
+        {
+            copiedShp += getResources().getString(R.string.BasicPointDir);
+        }
+        else if(MainActivity.actualShpType == MainActivity.ShapefileTypes.Polygon)
+        {
+            copiedShp += getResources().getString(R.string.BasicPolygonDir);
+        }
+        else
+        {
+            copiedShp += getResources().getString(R.string.BasicLineDir);
         }
 
+        File dest = new File(copyTofilepath);
+        dest.mkdirs();
+        File source = new File(copiedShp);
 
+        if (dest.exists() && dest.isDirectory() && source.exists()) {
+            File[] files = source.listFiles();
+            for (File f : files) {
+                try {
+                    String filePath = f.getPath();
+                    String fileEnding = filePath.substring( filePath.lastIndexOf('.'));
+                    File newFile = new File(copyTofilepath + edtText.getText().toString() + fileEnding);
+                    copy(f, newFile);
+                    if (fileEnding.equals(".shp"))
+                        MainActivity.mShapefilePath2 = newFile.getAbsolutePath();
+                } catch (Exception ex) {
+                }
+            }
+        }
     }
 
     public void onItemSelected(AdapterView<?> parent, View view,
                                int pos, long id) {
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
+        switch (parent.getId()) {
+            case R.id.spinner2:
+                String type = parent.getItemAtPosition(pos).toString();
+                switch(type) {
+                    case "Points":
+                        MainActivity.actualShpType = MainActivity.ShapefileTypes.Point;
+                        break;
+                    case "Polyline":
+                        MainActivity.actualShpType = MainActivity.ShapefileTypes.Line;
+                        break;
+                    case "Polygon":
+                        MainActivity.actualShpType = MainActivity.ShapefileTypes.Polygon;
+                        break;
+                }
+                break;
+        }
     }
 
     public void onNothingSelected(AdapterView<?> parent) {

@@ -22,6 +22,7 @@ import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -40,10 +41,12 @@ import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.Viewpoint;
+import com.esri.arcgisruntime.mapping.view.DefaultMapViewOnTouchListener;
 import com.esri.arcgisruntime.mapping.view.Graphic;
 import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.LocationDisplay;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.symbology.Renderer;
 import com.esri.arcgisruntime.symbology.SimpleFillSymbol;
 import com.esri.arcgisruntime.symbology.SimpleLineSymbol;
 import com.esri.arcgisruntime.symbology.SimpleRenderer;
@@ -107,6 +110,13 @@ public class MainActivity extends AppCompatActivity {
 	boolean wgs84 = true;
 	boolean add = true;
 
+	enum ShapefileTypes
+	{
+		Point, Line, Polygon
+	}
+
+	static ShapefileTypes actualShpType = ShapefileTypes.Line;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -154,12 +164,42 @@ public class MainActivity extends AppCompatActivity {
 		map = new ArcGISMap(spatRef);
 		mMapView.setMap(map);
 
+		mMapView.setOnTouchListener(
+				new DefaultMapViewOnTouchListener(MainActivity.this, mMapView) {
+					@Override
+					public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+						android.graphics.Point screenPoint = new android.graphics.Point(Math.round(motionEvent.getX()),
+								Math.round(motionEvent.getY()));
+						Point newPoint = mMapView.screenToLocation(screenPoint);
+						return true;
+					}
+				});
+
 		map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, lat, longi, 16);
 		mMapView.setMap(map);
 		mLocationDisplay = mMapView.getLocationDisplay();
 
-		String mShapefilePath = Environment.getExternalStorageDirectory().getPath() + "/ArcGIS/Samples/Shapefile/BW_Gebiet_Kreis/AX_Gebiet_Kreis.shp";
-		mShapefilePath2 = Environment.getExternalStorageDirectory().getPath() + "/ArcGIS/Samples/Shapefile/EmptyShapefileUTM/EmptyPolyline.shp";
+
+		String mShapefilePath = Environment.getExternalStorageDirectory().getPath() +
+				getResources().getString(R.string.BasicDir) +
+				getResources().getString(R.string.UserShapefiles) + "/BW_Gebiet_Kreis/AX_Gebiet_Kreis.shp";
+
+		mShapefilePath2 = Environment.getExternalStorageDirectory().getPath() +
+				getResources().getString(R.string.BasicDir) +
+				getResources().getString(R.string.BasicShapefiles);
+
+		if(actualShpType ==ShapefileTypes.Point)
+		{
+			mShapefilePath2 += getResources().getString(R.string.BasicPoint);
+		}
+		else if(actualShpType ==ShapefileTypes.Polygon)
+		{
+			mShapefilePath2 += getResources().getString(R.string.BasicPolygon);
+		}
+		else
+		{
+			mShapefilePath2 += getResources().getString(R.string.BasicLine);
+		}
 
 		// create the Symbol
 		SimpleLineSymbol lineSymbol = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 1.0f);
@@ -170,10 +210,10 @@ public class MainActivity extends AppCompatActivity {
 		backgroundShp = new Shapefile(map, mShapefilePath, renderer);
 
 		// create the Symbol
-		SimpleLineSymbol lineSymbol2 = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 1.0f);
-		renderer = new SimpleRenderer(lineSymbol);
+		/*SimpleLineSymbol lineSymbol2 = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 1.0f);
+		renderer = new SimpleRenderer(lineSymbol2);
 
-		editShp = new Shapefile(map, mShapefilePath2, renderer);
+		editShp = new Shapefile(map, mShapefilePath2, renderer);*/
 	}
 
 	public void startstop(View view) {
@@ -181,14 +221,19 @@ public class MainActivity extends AppCompatActivity {
 			case R.id.start:
 				if(!trackingStarted) {
 				/*myFeature = mTable.createFeature();
-				List<Field> fielList = mTable.getFields();
-				String name = fielList.get(0).getName();
-				String name2 = fielList.get(1).getName();
-				String name3 = fielList.get(2).getName();
 				// get field
 				Map<String, Object> attributes =  myFeature.getAttributes();
 				polygonPoints = new PointCollection(SpatialReference.create(25832));
 				polyLineCollection = new PointCollection(SpatialReference.create(25832));*/
+
+
+					// create the Symbol
+					SimpleLineSymbol lineSymbol2 = new SimpleLineSymbol(SimpleLineSymbol.Style.SOLID, Color.RED, 1.0f);
+					SimpleRenderer renderer = new SimpleRenderer(lineSymbol2);
+
+					editShp = new Shapefile(map, mShapefilePath2, renderer);
+
+
 					myFeature = editShp.getFeatureTable().createFeature();
 
 					// get field

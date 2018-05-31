@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Environment;
 
 import com.esri.arcgisruntime.data.ShapefileFeatureTable;
+import com.esri.arcgisruntime.data.ShapefileInfo;
 import com.esri.arcgisruntime.layers.FeatureLayer;
 import com.esri.arcgisruntime.loadable.LoadStatus;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
@@ -29,6 +30,7 @@ public class Shapefile {
 
         mTable.addDoneLoadingListener(() -> {
             if (mTable.getLoadStatus() == LoadStatus.LOADED) {
+                ShapefileInfo info = mTable.getInfo();
                 featureLayer = new FeatureLayer(mTable);
 
                 featureLayer.setRenderer(renderer);
